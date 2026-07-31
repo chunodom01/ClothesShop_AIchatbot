@@ -8,7 +8,6 @@ import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
 
-# ✅ Load .env from the project root (one level up from app/)
 env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
 load_dotenv(dotenv_path=env_path)
 
@@ -17,12 +16,11 @@ class Settings(BaseSettings):
     llm_provider: str = "gemini"
     openai_api_key: str = ""
     google_api_key: str = ""  
-    pinecone_environment: str
-        # used by Gemini
 
     # --- Vector DB (Pinecone) ---
     pinecone_api_key: str = ""
     pinecone_index_name: str = "fanpage-faqs"
+    pinecone_environment: str = ""   # used by Gemini
 
     # --- Facebook ---
     fb_verify_token: str = ""         # any random string; must match Meta webhook config
@@ -35,12 +33,11 @@ class Settings(BaseSettings):
     # --- Misc ---
     log_level: str = "INFO"
 
-    # ✅ Explicitly point to the .env file in the project root
     model_config = SettingsConfigDict(
         env_file=env_path,
         env_file_encoding="utf-8"
     )
 
-# ✅ Shared settings instance
+
 settings = Settings()
 print("Loaded Google API key:", settings.google_api_key)

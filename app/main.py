@@ -20,12 +20,12 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    build_agent()      # build the agent ONCE when the server starts
-    yield              # app runs here; code after yield runs on shutdown
+    build_agent()      
+    yield             
 
 app = FastAPI(title="Fanpage Chatbot Capstone", lifespan=lifespan)
 
-# All Facebook endpoints (GET verify + POST receive) live in app/webhook.py.
+
 app.include_router(webhook_router)
 
 
