@@ -1,22 +1,16 @@
-"""Save a customer's booking into Google Sheets."""
+"""Save a customer's booking into Google Sheets via SheetDB."""
 from datetime import datetime
-
-import gspread
+import requests
 from langchain_core.tools import tool
-from app.config import settings
 
-# Connect ONCE at import; reuse the worksheet on every call.
-_worksheet = (
-    gspread.service_account(filename=settings.google_sheets_credentials_path)
-    .open_by_key(settings.google_sheets_id)
-    .sheet1
-)
-
+# Put your SheetDB API endpoint here
+SHEETDB_API = "https://sheetdb.io/api/v1/1jwvbhi2iyqpb2"
 
 @tool
 def save_booking(name: str, phone: str, service: str,
                  preferred_time: str, notes: str = "") -> str:
-    """Save a customer's grooming booking to the salon's records.
+    """
+    Save a customer's grooming booking to the salon's records.
     Call this ONLY after you have the customer's name, phone, the service,
     and their preferred date/time.
 
@@ -28,5 +22,19 @@ def save_booking(name: str, phone: str, service: str,
         notes: any extra details (breed, size, special requests)
     """
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    _worksheet.append_row([timestamp, name, phone, service, preferred_time, notes])
-    return f"Booking saved for {name} ({service}, {preferred_time})."
+    new_row = {
+        "data": [{
+            "Timestamp": timestamp,
+            "Name": name,
+            "Phone": phone,
+            "Service": service,
+            "PreferredTime": preferred_time,
+            "Notes": notes
+        }]
+    }
+
+    try:
+        requests.post(SHEETDB_API, json=new_row)
+        return f"Booking saved for {name} ({service}, {preferred_time})."
+    except Exception as e:
+        return f"Failed to save booking: {e}"
