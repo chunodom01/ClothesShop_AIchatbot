@@ -183,3 +183,5 @@ Capstone for **STEP IT Academy · AI Module 8** — Phnom Penh.
 Persona, FAQ data, and fanpage: *Happy Paws Pet Salon* — replace with your own business to make it yours.
 
 <!-- TODO: add your live fanpage URL and a one-line persona description here before submitting. -->
+#   C l o t h e s S h o p _ A I c h a t b o t  
+ 
